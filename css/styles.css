@@ -1,0 +1,333 @@
+/*────────────────────────────────────────────────────────
+  styles.css – Fond fluide & design néon sombre
+────────────────────────────────────────────────────────*/
+
+/* 1) Fond animé très fluide (2 couches conic-gradient + blur) */
+body {
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    #121212, #1e1e2f, #2b2b3f, #1e1e2f, #121212
+  );
+  filter: blur(300px) saturate(150%);
+  transform-origin: center center;
+  pointer-events: none;
+  z-index: -1;
+}
+body::before {
+  animation: rotate-bg-1 200s linear infinite;
+}
+body::after {
+  animation: rotate-bg-2 300s linear infinite reverse;
+  mix-blend-mode: overlay;
+}
+@keyframes rotate-bg-1 { to { transform: rotate(360deg); } }
+@keyframes rotate-bg-2 { to { transform: rotate(360deg); } }
+
+
+/* 2) Variables & reset */
+:root {
+  --accent-cyan: #00aaff;
+  --accent-pink: #ff55aa;
+  --text-color:  #d0d0d0;
+  --section-bg:  rgba(17,18,23,0.9);
+  --button-bg:   rgba(17,18,23,0.8);
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--text-color);
+}
+
+
+/* 3) Sections semi-opaques */
+header,
+main section.card,
+section.gallery {
+  background: var(--section-bg);
+  border-radius: 1rem;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  max-width: 900px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 4) Navigation */
+.nav-bar {
+  display: flex;
+  justify-content: center;
+  background: rgba(17,18,23,0.8);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-bar ul { display: flex; gap: 2rem; list-style: none; }
+.nav-bar a {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+.nav-bar a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: var(--accent-cyan);
+  transition: width 0.3s;
+}
+.nav-bar a:hover::after { width: 100%; }
+
+
+/* 5) Grille des cartes famille */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 2rem;
+  padding: 2rem;
+  justify-items: center;
+  text-align: center;
+}
+.card {
+  box-shadow: 0 0 20px rgba(0,170,255,0.2);
+  padding: 2rem;
+}
+.card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 6px var(--accent-cyan);
+}
+.card p { line-height: 1.4; }
+
+/* Néon & mise en valeur des références mythologiques */
+.card .highlight {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 6px var(--accent-cyan), 0 0 12px var(--accent-cyan);
+  font-weight: bold;
+}
+
+
+/* 6) Galerie & Carousel pur JS */
+section.gallery h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 8px var(--accent-cyan);
+}
+/* Carousel en scroll-snap */
+.carousel {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  overflow: hidden;
+  background: var(--button-bg);
+  border-radius: 1rem;
+}
+.carousel-track-container { overflow: hidden; }
+.carousel-track {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: transform 0.5s ease;
+}
+/* Chaque slide “accroche” au début du conteneur */
+.slide {
+  flex: 0 0 auto;        /* ne pas grandir ni rétrécir */
+  width: 100%;           /* sera remplacé en JS, mais 100% pour fallback */
+  margin: 0;             /* supprimer tout écart */
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  aspect-ratio: 16 / 9;   /* si tu veux conserver le ratio */
+  overflow: hidden;
+}
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.slide img:hover { transform: scale(1.05); }
+.carousel-button {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  background: var(--button-bg);
+  border: none;
+  font-size: 2rem;
+  color: var(--accent-pink);
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  z-index: 2;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 8px var(--accent-pink);
+  transition: background .3s, box-shadow .3s;
+}
+.carousel-button.prev { left: 1rem; }
+.carousel-button.next { right: 1rem; }
+.carousel-button:hover {
+  background: rgba(17,18,23,0.9);
+  box-shadow: 0 0 12px var(--accent-pink);
+}
+@media (max-width:768px) { .slide { aspect-ratio:4/3; } }
+@media (max-width:480px) {
+  .slide { aspect-ratio:1/1; }
+  .carousel-button { font-size:1.5rem; padding:0.2rem; }
+}
+
+
+/* 7) Lightbox overlay */
+#lightbox-overlay {
+  display: none;
+  position: fixed; top:0; left:0;
+  width:100vw; height:100vh;
+  background: rgba(0,0,0,0.95);
+  align-items: center; justify-content: center;
+  z-index: 100;
+}
+#lightbox-overlay.active { display: flex; }
+#lightbox-overlay img {
+  max-width:90%; max-height:90%;
+  object-fit: contain;
+  border-radius:0.5rem;
+  box-shadow:0 0 20px rgba(0,170,255,0.5);
+}
+#lightbox-close {
+  position:absolute; top:1rem; right:1rem;
+  font-size:2.5rem; color:#fff;
+  cursor:pointer;
+  user-select:none;
+}
+
+/* Navigation lightbox */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(17,18,23,0.8);
+  border: none;
+  color: #fff;
+  font-size: 3rem;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  z-index: 101;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+#lightbox-prev { left: 2rem; }
+#lightbox-next { right: 2rem; }
+.lightbox-nav:hover {
+  background: rgba(17,18,23,0.9);
+}
+
+.slide-caption {
+  display: none;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  border-radius: 0.3rem;
+  white-space: nowrap;
+  pointer-events: none; /* ne gêne pas le clic */
+}
+
+.slide:hover .slide-caption {
+  display: block;
+}
+/* Caption dans la lightbox */
+#lightbox-caption {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.3rem;
+  max-width: 80%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 101;
+  pointer-events: none;
+}
+
+/* ───────────────────────────────────────────────────
+   Carousel Vidéo
+───────────────────────────────────────────────────── */
+.video-carousel {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  overflow: hidden;
+}
+
+.video-carousel .carousel-viewport {
+  display: flex;
+  transition: transform 0.5s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.video-carousel .slide {
+  flex: 0 0 100%;       /* chaque diapo fait 100% du container */
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  aspect-ratio: 16 / 9; /* ratio 16:9 pour uniformité */
+  overflow: hidden;
+}
+
+.video-carousel .slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* crop & center */
+  display: block;
+}
+
+/* Boutons Précédent / Suivant */
+.video-carousel .carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(17,18,23,0.8);
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: 0.3rem;
+  transition: background 0.2s;
+}
+.video-carousel .carousel-button.prev { left: 1rem; }
+.video-carousel .carousel-button.next { right: 1rem; }
+.video-carousel .carousel-button:hover {
+  background: rgba(17,18,23,0.9);
+}
