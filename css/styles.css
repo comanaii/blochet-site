@@ -331,3 +331,72 @@ section.gallery h2 {
 .video-carousel .carousel-button:hover {
   background: rgba(17,18,23,0.9);
 }
+
+/*───────────────────────────────────────────────
+  1) Menu responsive
+───────────────────────────────────────────────*/
+.nav-bar {
+  position: relative;
+}
+.nav-bar .hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0 1rem;
+}
+.nav-bar ul {
+  transition: max-height .3s ease;
+}
+.nav-bar.collapsed ul {
+  max-height: 0;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .nav-bar .hamburger {
+    display: block;
+  }
+  .nav-bar ul {
+    display: block;
+    max-height: none; /* passe en collapsed pour cacher */
+    background: rgba(17,18,23,0.9);
+  }
+  .nav-bar ul li {
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+}
+
+/*───────────────────────────────────────────────
+  2) Sections “show/hide” sur mobile
+───────────────────────────────────────────────*/
+.card {
+  position: relative;
+  /* on définit un conteneur flex pour classer h2 + toggle */
+}
+.card .toggle-btn {
+  display: none;
+}
+@media (max-width: 768px) {
+  /* wrappe le texte dans .card-content */
+  .card .card-content {
+    display: none; /* caché par défaut */
+    margin-top: 1rem;
+  }
+  .card.collapsed .card-content {
+    display: block;
+  }
+  .card .toggle-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border-radius: 0.3rem;
+  }
+}
