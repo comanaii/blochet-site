@@ -1,4 +1,44 @@
 // js/scripts.js
+document.addEventListener('DOMContentLoaded', () => {
+  // ----- 1) Menu hamburger -----
+  const nav = document.querySelector('.nav-bar');
+  const btn = nav.querySelector('.hamburger');
+  btn.addEventListener('click', () => {
+    nav.classList.toggle('collapsed');
+  });
+  // démarrer fermé sur mobile
+  if (window.innerWidth <= 768) nav.classList.add('collapsed');
+
+  // ----- 2) Wrap & toggle des sections -----
+  document.querySelectorAll('.card').forEach(card => {
+    // 2.1. Crée le contenu caché
+    const wrapper = document.createElement('div');
+    wrapper.className = 'card-content';
+    // déplace tous les <p> et éléments après le <h2> dedans
+    [...card.children].forEach(el => {
+      if (el.tagName.toLowerCase() === 'p') {
+        wrapper.appendChild(el);
+      }
+    });
+    card.appendChild(wrapper);
+
+    // 2.2. Crée le bouton toggle
+    const toggle = document.createElement('button');
+    toggle.className = 'toggle-btn';
+    toggle.textContent = 'Afficher le texte';
+    card.insertBefore(toggle, wrapper);
+
+    // 2.3. Au clic, on montre/masque
+    toggle.addEventListener('click', () => {
+      card.classList.toggle('collapsed');
+      if (card.classList.contains('collapsed')) {
+        toggle.textContent = 'Masquer le texte';
+      } else {
+        toggle.textContent = 'Afficher le texte';
+      }
+    });
+  });
+});
 
 window.addEventListener('load', () => {
   document.querySelectorAll('.carousel').forEach(carousel => {
